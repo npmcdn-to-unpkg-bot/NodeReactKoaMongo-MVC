@@ -1,0 +1,148 @@
+doctype html
+html(lang="en")
+	extends template.jade
+	block title
+		title Trip Advisor
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react.min.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react-dom.min.js') 
+		script(src='https://npmcdn.com/babel-core@5.8.38/browser.min.js')
+	block content
+		#content
+			script(type='text/babel').
+				
+				var Entries = React.createClass({
+
+					update: function(e){
+						$.ajax({
+							type: 'PUT',
+							url: 'http://localhost:3000/',
+							dataType: 'json',
+							data: {"destination":e.target.parentElement.parentElement.childNodes[0].innerText,"rating":e.target.parentElement.childNodes[0].value},
+							success: function(res) {
+								window.location.replace("/");
+							}.bind(this),
+							error: function(xhr, status, err) {
+								console.dir("Update Error");
+								console.dir(xhr);
+								console.dir(status);
+								console.dir(err);
+							}.bind(this)
+						});					
+					},
+					
+					del: function(e){
+						$.ajax({
+							type: 'DELETE',
+							url: 'http://localhost:3000/',
+							dataType: 'json',
+							data: {"destination":e.target.parentElement.parentElement.childNodes[0].innerText},
+							success: function(res) {
+								window.location.replace("/");
+							}.bind(this),
+							error: function(xhr, status, err) {
+								console.dir("Delete Error");
+								console.dir(xhr);
+								console.dir(status);
+								console.dir(err);
+							}.bind(this)
+						});					
+					},
+					
+					render: function(){
+					
+						return (
+							<tr>
+								<td>{this.props.item.destination}</td>
+								<td>{this.props.item.country}</td>
+								<td>
+									<input type='text' name='rating' defaultValue={this.props.item.rating} /> 
+									<button type='button' onClick={this.update}>Edit</button>
+									<button type='button' onClick={this.del}>Delete</button>
+								</td>
+							</tr>
+						);
+						
+					}
+					
+				});
+				
+				var List = React.createClass({
+
+					getInitialState:function(){
+						return {entries: ''}
+					},
+				
+					componentWillMount:function(){
+						$.ajax({
+							type: 'GET',
+							url: 'http://localhost:3000/read',
+							success: function(res) {
+								this.setState( JSON.parse(res) );
+							}.bind(this),
+							error: function(xhr, status, err) {
+								console.dir("Read Error");							
+								console.dir(xhr);
+								console.dir(status);
+								console.dir(err);
+							}.bind(this)
+						});
+					},
+									
+					create: function(e){
+						$.ajax({
+							type: 'POST',
+							url: 'http://localhost:3000/',
+							dataType: 'json',
+							data: {"destination":e.target.parentElement.childNodes[0].value,"country":e.target.parentElement.childNodes[1].value,"rating":e.target.parentElement.childNodes[2].value},
+							success: function(res) {
+								window.location = "http://localhost:3000/";
+							}.bind(this),
+							error: function(xhr, status, err) {
+								console.dir("Create Error");
+								console.dir(xhr);
+								console.dir(status);
+								console.dir(err);
+							}.bind(this)
+						});					
+					},
+					
+					render: function(){
+					
+						var entries;
+						if(this.state.entries !== null && this.state.entries.length > 0){
+							entries = this.state.entries.map(function(item){
+								return <Entries item={item} />
+							});
+						}
+
+						return (
+							<div className='container'>
+							
+								<h1>Trip Advisor</h1>
+								
+								<div className='row'>
+									<table className='table'>
+										<thead>
+											<tr><td>Destination</td><td>Country</td><td>Rating</td></tr>
+										</thead>
+										<tbody>
+											{entries}
+										</tbody>										
+									</table>
+								</div>
+								
+								<div className='row'>
+									<input type='text' name='destination' /> 
+									<input type='text' name='country' /> 
+									<input type='text' name='rating' /> 
+									<button type='button' onClick={this.create}>New</button>
+								</div>
+
+							</div>
+						);
+						
+					}
+					
+				});
+				
+				ReactDOM.render(<List />, document.getElementById('content'))
