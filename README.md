@@ -1,4 +1,4 @@
-# Node.js React.js Koa.js MongoDB MVC
+# Node.js React.js Koa.js MongoDB Stack - MVC
 
 ## Setup
 
