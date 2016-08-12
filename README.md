@@ -1,4 +1,4 @@
-# NodeReactKoaMongo-MVC
+# Node.js React.js Koa.js MongoDB MVC
 
 ## Setup
 
