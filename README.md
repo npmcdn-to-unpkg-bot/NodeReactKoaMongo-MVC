@@ -119,7 +119,7 @@ html(lang="en")
 		title Trip Advisor
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react.min.js')
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react-dom.min.js') 
-		script(src='https://npmcdn.com/babel-core@5.8.38/browser.min.js')
+		script(src='https://unpkg.com/babel-core@5.8.38/browser.min.js')
 	block content
 		#content
 			script(type='text/babel').
